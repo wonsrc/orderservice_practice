@@ -76,6 +76,44 @@ public class OrderingService {
         return orderingRepository.save(ordering);
 
     }
+
+    public void myOrders(TokenUserInfo userInfo) {
+        /*
+         OrderingListResDto -> OrderDetailDto(static 내부 클래스)
+         {
+            id: 주문번호,
+            userEmail: 주문한 사람 이메일,
+            orderStatus: 주문 상태
+            orderDetails: [
+                {
+                    id: 주문상세번호,
+                    productName: 상품명,
+                    count: 수량
+                },
+                {
+                    id: 주문상세번호,
+                    productName: 상품명,
+                    count: 수량
+                },
+                {
+                    id: 주문상세번호,
+                    productName: 상품명,
+                    count: 수량
+                }
+                ...
+            ]
+         }
+         */
+        String userEmail = userInfo.getEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new EntityNotFoundException("User Not Found")
+        );
+
+        List<Ordering> orderingList = orderingRepository.findByUser(user);
+
+        // Ordering 엔터티를 DTO로 변환하자. 주문 상세에 대한 변환도 필요하다!
+
+    }
 }
 
 
