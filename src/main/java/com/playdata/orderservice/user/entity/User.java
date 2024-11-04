@@ -1,6 +1,7 @@
 package com.playdata.orderservice.user.entity;
 
 import com.playdata.orderservice.common.entity.Address;
+import com.playdata.orderservice.user.dto.UserResDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,18 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Builder.Default // build시 초기화된 값으로 세팅하기 위한 아노테이션
     private Role role = Role.USER;
+
+
+    public UserResDto fromEntity() {
+        return UserResDto.builder()
+                .id(id)
+                .name(name)
+                .email(email)
+                .role(role)
+                .address(address)
+                .build();
+    }
+
 
 }
 
