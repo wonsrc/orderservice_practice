@@ -33,6 +33,11 @@ public class Product extends BaseTimeEntity {
         this.imagePath = imagePath;
     }
 
+    // 재고 수량 setter 직접 작성
+    public void updateStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = this.stockQuantity - stockQuantity;
+    }
+
 
     public ProductResDto fromEntity() {
         return ProductResDto.builder()
