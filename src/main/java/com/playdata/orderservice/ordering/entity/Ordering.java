@@ -27,7 +27,9 @@ public class Ordering {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private OrderStatus orderStatus = OrderStatus.ORDERED;
 
     @OneToMany(mappedBy = "ordering", cascade = CascadeType.PERSIST)
     private List<OrderDetail> orderDetails;
@@ -52,6 +54,10 @@ public class Ordering {
                 .orderStatus(this.orderStatus)
                 .orderDetails(orderDetailDtos)
                 .build();
+    }
+
+    public void updateStatus(OrderStatus status) {
+        this.orderStatus = status;
     }
 
 }
