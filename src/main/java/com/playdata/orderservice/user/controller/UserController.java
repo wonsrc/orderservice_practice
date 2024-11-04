@@ -44,12 +44,23 @@ public class UserController {
 
     @PostMapping("/doLogin")
     public ResponseEntity<?> doLogin(@RequestBody UserLoginReqDto dto) {
+        // email, password가 맞는 지 검증
         User user = userService.login(dto);
 
         // 회원 정보가 일치한다면, JWT를 클라이언트에게 발급해 주어야 한다. -> 로그인 유지를 위해!
+        // Access Token을 생성해서 발급해 주겠다. -> 수명이 짧습니다.
         String token
                 = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
         log.info("token: {}", token);
+
+        // Refresh Token을 생성해 주겠다.
+        // Access Token의 수명이 만료되었을 경우 Refresh Token을 확인해서 리프레시가 유효한 경우
+        // 로그인 없이 Access Token을 재발급 해주는 용도로 사용.
+        String refreshToken
+                = jwtTokenProvider.createRefreshToken(user.getEmail(), user.getRole().toString());
+
+        // refresh Token을 DB에 저장하자. -> redis에 저장.
+
 
         // 생성된 토큰 외에 추가로 전달할 정보가 있다면 Map을 사용하는 것이 좋습니다.
         Map<String, Object> logInfo = new HashMap<>();

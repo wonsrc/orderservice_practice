@@ -36,6 +36,8 @@ public class User {
     @Builder.Default // build시 초기화된 값으로 세팅하기 위한 아노테이션
     private Role role = Role.USER;
 
+    private String refreshToken;
+
 
     public UserResDto fromEntity() {
         return UserResDto.builder()
