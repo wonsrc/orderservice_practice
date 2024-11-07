@@ -67,7 +67,7 @@ public class UserController {
                 = jwtTokenProvider.createRefreshToken(user.getEmail(), user.getRole().toString());
 
         // refresh Token을 DB에 저장하자. -> redis에 저장.
-        redisTemplate.opsForValue().set(user.getEmail(), refreshToken, 240, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(user.getEmail(), refreshToken, 2, TimeUnit.MINUTES);
 
 
         // 생성된 토큰 외에 추가로 전달할 정보가 있다면 Map을 사용하는 것이 좋습니다.
@@ -109,9 +109,8 @@ public class UserController {
 
     // access token이 만료되어 새 토큰을 요청
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody String id) {
-        log.info("/user/refresh: POST, id: {}", id);
-        User user = userService.findById(Long.parseLong(id));
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> id) {
+        User user = userService.findById(Long.parseLong(id.get("id")));
 
         // email로 redis를 조회해서 refresh token을 가져오자
         Object obj = redisTemplate.opsForValue().get(user.getEmail());
