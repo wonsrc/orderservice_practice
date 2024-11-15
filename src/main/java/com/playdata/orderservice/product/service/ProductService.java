@@ -44,27 +44,24 @@ public class ProductService {
         String uniqueFileName
                 = UUID.randomUUID() + "_" + productImage.getOriginalFilename();
 
-//        File file
-//                = new File("/Users/stephen/Desktop/develop/upload/" + uniqueFileName);
-//        try {
-//            productImage.transferTo(file);
-//        } catch (IOException e) {
-//            throw new RuntimeException("이미지 저장 실패!");
-//        }
-        
+        /*
+        File file
+                = new File("/Users/stephen/Desktop/develop/upload/" + uniqueFileName);
+        try {
+            productImage.transferTo(file);
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 저장 실패!");
+        }
+        */
+
         // 더 이상 로컬 경로에 이미지를 저장하지 않고, s3 버킷에 저장
-//        try {
-//            String imageUrl
-//                    = s3Config.uploadToS3Bucket(productImage.getBytes(), uniqueFileName);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
 
         String imageUrl
-                    = s3Config.uploadToS3Bucket(productImage.getBytes(), uniqueFileName);
+                = s3Config.uploadToS3Bucket(productImage.getBytes(), uniqueFileName);
+
 
         Product product = dto.toEntity();
-        product.updateImagePath(imageUrl);
+        product.updateImagePath(imageUrl); // 파일명이 아닌 s3 오브젝트의 url이 저장될 것이다.
 
         return productRepository.save(product);
 
@@ -126,6 +123,7 @@ public class ProductService {
 
         String imageUrl = product.getImagePath(); // S3 버킷 내의 오브젝트 url
         s3Config.deleteFromS3Bucket(imageUrl);
+
         productRepository.deleteById(id);
     }
 }

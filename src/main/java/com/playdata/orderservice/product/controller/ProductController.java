@@ -32,7 +32,6 @@ public class ProductController {
     // 요청과 함께 이미지가 전달이 될 것이다. 해당 이미지를 처리하는 방식이 두 가지로 나뉜다.
     // 1. JS의 FormData 객체를 통해 모든 데이터를 전달. (multipart/form-data 형식으로 전달, form 태그 x)
     // 2. JSON 형태로 전달 (이미지를 Base64 인코딩을 통해 문자열로 변환해서 전달)
-
     public ResponseEntity<?> createProduct(ProductSaveReqDto dto) throws IOException {
 
         log.info("/product/create: POST");
@@ -48,7 +47,11 @@ public class ProductController {
     @GetMapping("/list")
     // 페이징이 필요합니다. 리턴은 ProductResDto 형태로 리턴됩니다.
     // ProductResDto(id, name, category, price, stockQuantity, imagePath)
+    // 컨트롤러 파라미터로 Pageable 선언하면, 페이징 파라미터 처리를 쉽게 진행할 수 있음.
+    // /list?page=1&size=10&sort=name,desc 요런 식으로.
+    // 요청 시 쿼리스트링이 전달되지 않으면 기본값 0, 20, unsorted
     public ResponseEntity<?> listProducts(ProductSearchDto searchDto, Pageable pageable) {
+        log.info("/product/list: GET, dto: {}", searchDto);
         log.info("/product/list: GET, pageable={}", pageable);
         Page<ProductResDto> dtoList = productService.productList(searchDto, pageable);
 
@@ -60,7 +63,7 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete")
     public ResponseEntity<?> productDelete(@RequestParam Long id) throws Exception {
-        log.info("/product/delete: DELETE, id={}", id);
+        log.info("/product/delete: DELETE, id: {}", id);
         productService.productDelete(id);
 
         CommonResDto resDto
@@ -71,24 +74,5 @@ public class ProductController {
 
 
 
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
