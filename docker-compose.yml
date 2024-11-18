@@ -1,7 +1,7 @@
 
 services:
-  app:
-    build:
+  backend:
+    image: wonsrc/order-service:latest # docker hub에 push한 이미지 이름
     ports:
       - "80:80"
     environment:
